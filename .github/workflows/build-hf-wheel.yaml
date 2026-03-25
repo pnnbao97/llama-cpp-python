@@ -1,0 +1,33 @@
+name: build-cpu-wheel-hf
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          repository: abetlen/llama-cpp-python
+          submodules: recursive
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+
+      - run: pip install cibuildwheel
+
+      - name: Build wheel
+        env:
+          CIBW_BUILD: "cp313-manylinux_x86_64"
+          CIBW_SKIP: "*-musllinux_*"
+          CIBW_REPAIR_WHEEL_COMMAND_LINUX: ""
+          CIBW_ENVIRONMENT_LINUX: >-
+            CMAKE_ARGS="-DGGML_BLAS=OFF -DGGML_NATIVE=OFF"
+        run: python -m cibuildwheel --output-dir wheelhouse
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: wheelhouse
+          path: wheelhouse/*.whl

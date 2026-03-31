@@ -14,13 +14,13 @@ jobs:
 
       - uses: actions/setup-python@v5
         with:
-          python-version: "3.13"
+          python-version: "3.12"
 
       - run: pip install cibuildwheel
 
       - name: Build wheel
         env:
-          CIBW_BUILD: "cp313-manylinux_x86_64"
+          CIBW_BUILD: "cp312-manylinux_x86_64"
           CIBW_SKIP: "*-musllinux_*"
           CIBW_REPAIR_WHEEL_COMMAND_LINUX: ""
           CIBW_ENVIRONMENT_LINUX: >-
